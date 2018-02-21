@@ -33,15 +33,13 @@ log() {
     echo "${__LOGTIME__} $(basename ${0}) (${__LOGPRIO__}): ${__LOGMSG__}" >> ${__LOGFILE__}
 }
 
-__URL__="https://api.cloudflare.com/client/v4/zones/${__ZONE_ID__}/dns_records/${__RECID__}"
+__URL__="https://www.getflix.com.au/api/v1/addresses.json"
 
 # Update DNS record:
 log "Updating with ${__MYIP__}..."
-__RESPONSE__=$(curl -s -X PUT "${__URL__}" \
-     -H "X-Auth-Email: ${__USERNAME__}" \
-     -H "X-Auth-Key: ${__PASSWORD__}" \
-     -H "Content-Type: application/json" \
-     --data "{\"type\":\"${__RECTYPE__}\",\"name\":\"${__HOSTNAME__}\",\"content\":\"${__MYIP__}\",\"ttl\":${__TTL__},\"proxied\":${__PROXY__}}")
+__RESPONSE__=$(curl -u ${__USERNAME__}:x -X GET \
+     "${__URL__}" \
+     -H "Content-Type: application/json"
 
 # Strip the result element from response json
 __RESULT__=$(echo ${__RESPONSE__} | grep -Po '"success":\K.*?[^\\],')
